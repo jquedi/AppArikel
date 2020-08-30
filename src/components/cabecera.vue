@@ -1,6 +1,6 @@
 <template>
     <div id="cabecera">
-
+        hola
     </div>
 </template>
 
