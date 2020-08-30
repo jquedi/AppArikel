@@ -1,11 +1,7 @@
 <template>
   <div id="app">
     <div id="cabecera">
-      <!-- <transition name="slide">
-      <button id="desplegarMenu" @click="showMenu = !showMenu, moverB = !moverB"></button>
-      </transition>-->
-
-        <button id="desplegarMenu" @click="toggleMenu" :class="setButtonVisibility"></button>
+      <button id="desplegarMenu" @click="toggleMenu" :class="setButtonVisibility"></button>
 
       <h1>Arikel VS</h1>
     </div>
@@ -40,7 +36,10 @@ import micomponente from "./components/componente.vue";
 export default {
   name: "App",
   components: {
-    micomponente
+    micomponente,
+  },
+  created() {
+    //axios
   },
   data() {
     return {
@@ -50,20 +49,20 @@ export default {
       opcion4: "Desconectar",
       showMenu: false,
       moverB: false,
+      datosPhp: [{}, {}],
     };
   },
   methods: {
     toggleMenu() {
-      this.showMenu = !this.showMenu, 
-      this.moverB = !this.moverB
-    }
+      (this.showMenu = !this.showMenu), (this.moverB = !this.moverB);
+    },
   },
-  computed:{
+  computed: {
     setButtonVisibility() {
-      if (this.moverB) return 'slide'
-      else return ''
-    }
-  }
+      if (this.moverB) return "slide";
+      else return "";
+    },
+  },
 };
 </script>
 
@@ -72,20 +71,14 @@ export default {
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
-.slide{
+.slide {
   transform: translateX(150px);
 }
-/* .slide-enter-active,
-.slide-leave-active {
-  transition: 1s;
-}
-.slide-enter, .slide-leave-to  {
-  transform: translateX(150px);
-} */
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
