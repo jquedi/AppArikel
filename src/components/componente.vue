@@ -1,6 +1,5 @@
 <template>
   <div id="componente">
-    <hr />
     <h1>Hola mundo!</h1>
     <h2>{{subtitulo}}</h2>
     <ul id="bucleFor">
@@ -10,7 +9,6 @@
         Capitulos: {{ serie.capitulos }}
       </li>
     </ul>
-    <hr />
   </div>
 </template>
 

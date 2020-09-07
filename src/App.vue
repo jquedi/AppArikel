@@ -14,13 +14,19 @@
       <div id="menu1" v-if="showMenu">
         <ul id="UlMenu" style=" max-width: 200px;">
           <li>
-            <button class="buttonMenu" id="seguimientos">{{opcion1}}</button>
+                        <router-link to="/">
+              <button class="buttonMenu" id="seguimientos">{{opcion1}}</button>
+            </router-link>
           </li>
           <li>
-            <button class="buttonMenu" id="documentos">{{opcion2}}</button>
+            <router-link to="/documentos">
+              <button class="buttonMenu" id="documentos">{{opcion2}}</button>
+            </router-link>
           </li>
           <li>
-            <button class="buttonMenu" id="eventos">{{opcion3}}</button>
+            <router-link to="/eventos">
+              <button class="buttonMenu" id="eventos">{{opcion3}}</button>
+            </router-link>
           </li>
           <li>
             <button class="buttonMenu" id="desconectar">{{opcion4}}</button>
@@ -31,17 +37,15 @@
     <transition name="fade">
       <div id="ennegrecido" v-if="showMenu"></div>
     </transition>
-    <micomponente></micomponente>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import micomponente from "./components/componente.vue";
 
 export default {
   name: "App",
   components: {
-    micomponente,
   },
   created() {
     //axios
@@ -65,9 +69,10 @@ export default {
   },
   computed: {
     btnStyles() {
-      if(this.moverB) return {
-        transform: `translateX(${this.desplazar}px)`,
-      };
+      if (this.moverB)
+        return {
+          transform: `translateX(${this.desplazar}px)`,
+        };
       else return "";
     },
     setButtonVisibility() {
