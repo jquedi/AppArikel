@@ -27,10 +27,10 @@
               <th>Capitulos</th>
               <th>Nombre</th>
             </tr>
-            <tr v-for="(seguimiento, index) in allData" v-bind:key="index">
-              <td>{{ seguimiento.temporadas }}</td>
-              <td>{{ seguimiento.capitulos }}</td>
-              <td>{{ seguimiento.nombre }}</td>
+            <tr v-for="(seguimiento, index) in seguimientos" v-bind:key="index">
+              <td>{{ seguimiento }}</td>
+              <td>{{ seguimiento }}</td>
+              <td>{{ seguimiento }}</td>
             </tr>
             <tr v-if="nodata">
               <td colspan="3" align="center">No Data Found</td>
@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       subtitulo: "Ejemplo de texto",
-      allData: "",
+      seguimientos: "",
       query: "",
       nodata: false,
     };
@@ -58,15 +58,17 @@ export default {
   methods: {
     fetchData: function () {
       axios
-        .post("seguimientos.php", {
+        .post("http://app.arikelk9.es/seguimientos.php", {
           query: this.query,
         })
-        .then(function (response) {
+        .then((response) => {
           if (response.data.length > 0) {
-            this.allData = response.data;
+            alert(response.data);
+            this.seguimientos = response.data;
             this.nodata = false;
           } else {
-            this.allData = "";
+            alert(response.data);
+            this.seguimientos = "";
             this.nodata = true;
           }
         });
