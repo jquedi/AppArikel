@@ -14,7 +14,7 @@
       <div id="menu1" v-if="showMenu">
         <ul id="UlMenu" style=" max-width: 200px;">
           <li>
-                        <router-link to="/">
+            <router-link to="/">
               <button class="buttonMenu" id="seguimientos">{{opcion1}}</button>
             </router-link>
           </li>
@@ -37,16 +37,14 @@
     <transition name="fade">
       <div id="ennegrecido" v-if="showMenu"></div>
     </transition>
-    <router-view/>
+    <router-view style="margin-top: 80px" />
   </div>
 </template>
 
 <script>
-
 export default {
   name: "App",
-  components: {
-  },
+  components: {},
   created() {
     //axios
   },

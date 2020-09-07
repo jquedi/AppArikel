@@ -1,7 +1,16 @@
 <template>
     <div class="eventos">
-        <h1>
-            eventos
-        </h1>
+        <eventosC></eventosC>
     </div>
 </template>
+
+<script>
+import eventosC from '@/components/eventosC.vue'
+
+export default {
+    name: 'eventos',
+    components: {
+        eventosC
+    }
+}
+</script>

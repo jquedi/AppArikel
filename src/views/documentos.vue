@@ -1,7 +1,16 @@
 <template>
     <div class="documentos">
-        <h1>
-            documentos
-        </h1>
+        <documentosC></documentosC>
     </div>
 </template>
+
+<script>
+import documentosC from '@/components/documentosC.vue'
+
+export default {
+    name: 'documentos',
+    components: {
+        documentosC
+    }
+}
+</script>

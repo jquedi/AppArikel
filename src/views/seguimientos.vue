@@ -1,7 +1,16 @@
 <template>
     <div class="seguimientos">
-        <h1>
-            seguimeintos
-        </h1>
+        <seguimientosC></seguimientosC>
     </div>
 </template>
+
+<script>
+import seguimientosC from '@/components/seguimientosC.vue'
+
+export default {
+    name: 'seguimientos',
+    components: {
+        seguimientosC
+    }
+}
+</script>
