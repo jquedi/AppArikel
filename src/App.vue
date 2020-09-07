@@ -1,13 +1,18 @@
 <template>
   <div id="app">
     <div id="cabecera">
-      <button id="desplegarMenu" @click="toggleMenu" :class="setButtonVisibility"></button>
+      <button
+        id="desplegarMenu"
+        :style="btnStyles"
+        @click="toggleMenu"
+        :class="setButtonVisibility"
+      ></button>
 
       <h1>Arikel VS</h1>
     </div>
     <transition name="fade">
       <div id="menu1" v-if="showMenu">
-        <ul style=" max-width: 200px;">
+        <ul id="UlMenu" style=" max-width: 200px;">
           <li>
             <button class="buttonMenu" id="seguimientos">{{opcion1}}</button>
           </li>
@@ -50,6 +55,7 @@ export default {
       showMenu: false,
       moverB: false,
       datosPhp: [{}, {}],
+      desplazar: 150,
     };
   },
   methods: {
@@ -58,6 +64,12 @@ export default {
     },
   },
   computed: {
+    btnStyles() {
+      if(this.moverB) return {
+        transform: `translateX(${this.desplazar}px)`,
+      };
+      else return "";
+    },
     setButtonVisibility() {
       if (this.moverB) return "slide";
       else return "";
