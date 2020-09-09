@@ -21,22 +21,34 @@
       </div>
       <div class="panel-body">
         <div class="table-responsive">
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered table-striped" style="table-layout: fixed;">
             <tr>
-              <th>Temporadas</th>
-              <th>Capitulos</th>
-              <th>Nombre</th>
+              <th class="text fecha">FECHA</th>
+              <th class="text campo1">REQUERIMIENTO</th>
+              <th class="text campo2">SUCESO</th>
             </tr>
-            <tr v-for="(seguimiento, index) in seguimientos" v-bind:key="index">
-              <td>{{ seguimiento }}</td>
-              <td>{{ seguimiento }}</td>
-              <td>{{ seguimiento }}</td>
+            <tr
+              v-for="(seguimiento, index) in seguimientos"
+              v-bind:key="index"
+              @click="abrirSuceso"
+            >
+              <td class="text fecha">{{ seguimiento.FECHA }}</td>
+              <td class="text campo1">{{ seguimiento.REQUERIMIENTO }}</td>
+              <td class="text campo2">{{ seguimiento.SUCESO }}</td>
             </tr>
             <tr v-if="nodata">
-              <td colspan="3" align="center">No Data Found</td>
+              <td class="text" colspan="3" align="center">No Data Found</td>
             </tr>
           </table>
         </div>
+      </div>
+    </div>
+    <div id="oculto" v-if="showSuceso">
+      <div id="oculto2" @click="abrirSuceso">
+
+      </div>
+      <div id="cajaSeguimiento">
+
       </div>
     </div>
   </div>
@@ -53,6 +65,7 @@ export default {
       seguimientos: "",
       query: "",
       nodata: false,
+      showSuceso: false,
     };
   },
   methods: {
@@ -63,15 +76,16 @@ export default {
         })
         .then((response) => {
           if (response.data.length > 0) {
-            alert(response.data);
             this.seguimientos = response.data;
             this.nodata = false;
           } else {
-            alert(response.data);
             this.seguimientos = "";
             this.nodata = true;
           }
         });
+    },
+    abrirSuceso() {
+      this.showSuceso = !this.showSuceso;
     },
   },
   created: function () {
@@ -79,3 +93,45 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.text {
+  font-size: 2vmin;
+}
+.fecha {
+  width: 7%;
+}
+.campo1 {
+  width: 15%;
+}
+.campo2 {
+  width: 15%;
+}
+#oculto {
+  background: #00000052;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5000;
+}
+#cajaSeguimiento{
+  height: 80%;
+  width: 80%;
+  margin: auto;
+  background-color: white;
+  top: 10%;
+  position: fixed;
+  left: 10%;
+  z-index: 10;
+}
+#oculto2{
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+</style>
