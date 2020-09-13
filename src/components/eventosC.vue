@@ -3,18 +3,23 @@
     <h1>eventos</h1>
     <h2>{{subtitulo}}</h2>
     <ul id="bucleFor">
-      <li v-for="(serie, index) in series" v-bind:key="index">
-        nombre: {{ serie.nombre }}
-        Temporadas: {{ serie.temporadas }}
-        Capitulos: {{ serie.capitulos }}
+      <li v-for="item of persona" v-bind:key="item.id">
+        Temporadas: {{ persona[0].id }}
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import {mapState, mapMutations} from "vuex";
 export default {
   name: "eventosC",
+  computed: {
+    ...mapState(["persona"]),
+  },
+  methods: {
+    ...mapMutations(['modificar'])
+  },
   data() {
     return {
       subtitulo: "Ejemplo de texto",

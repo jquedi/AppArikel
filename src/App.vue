@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import {mapState, mapMutations} from "vuex";
 import axios from "axios";
 
 export default {
@@ -86,9 +87,12 @@ export default {
       desplazar: 150,
       usuario: "",
       contraseña: "",
+      id: 0,
     };
   },
   methods: {
+    ...mapMutations(['modificar']),
+
     toggleMenu() {
       (this.showMenu = !this.showMenu), (this.moverB = !this.moverB);
     },
@@ -99,9 +103,10 @@ export default {
           query2: this.contraseña,
         })
         .then((response) => {
-          this.personaLogin = response.data;
-          if(this.personaLogin > 0){
+          this.id = response.data;
+          if(this.id > 0){
             this.login = !this.login
+            this.$store.commit('modificar', this.id)
           }else{
             alert("Usuario y/o contraseña no validos");
           }
@@ -109,6 +114,8 @@ export default {
     },
   },
   computed: {
+    ...mapState(["persona"]),
+
     btnStyles() {
       if (this.moverB)
         return {
