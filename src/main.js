@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 window.$ = window.jQuery = require('jquery')
 
+Vue.personaLogin= Vue.prototype.personaLogin = 15;
+
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)

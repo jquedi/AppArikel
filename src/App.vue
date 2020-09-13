@@ -37,11 +37,36 @@
     <transition name="fade">
       <div id="ennegrecido" v-if="showMenu"></div>
     </transition>
+    <transition name="fade">
+      <div id="log" v-if="!login">
+        <div id="divlog">
+          <table style="margin: auto;">
+            <tr>
+              <td>
+                <input class="input" type="text" v-model="usuario" placeholder="Usuario" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input class="input" type="password" v-model="contraseña" placeholder="Contraseña" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button @click="iniciarsesion">Iniciar Sesión</button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </transition>
     <router-view style="margin-top: 80px" />
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "App",
   components: {},
@@ -56,13 +81,31 @@ export default {
       opcion4: "Desconectar",
       showMenu: false,
       moverB: false,
+      login: false,
       datosPhp: [{}, {}],
       desplazar: 150,
+      usuario: "",
+      contraseña: "",
     };
   },
   methods: {
     toggleMenu() {
       (this.showMenu = !this.showMenu), (this.moverB = !this.moverB);
+    },
+    iniciarsesion() {
+      axios
+        .post("http://app.arikelk9.es/login.php", {
+          query: this.usuario,
+          query2: this.contraseña,
+        })
+        .then((response) => {
+          this.personaLogin = response.data;
+          if(this.personaLogin > 0){
+            this.login = !this.login
+          }else{
+            alert("Usuario y/o contraseña no validos");
+          }
+        });
     },
   },
   computed: {
@@ -179,5 +222,20 @@ li {
   width: 35px;
   transition: 1s;
   top: 20px;
+}
+#log {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: blue;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+}
+#divlog {
+  position: fixed;
+  width: 100%;
+  height: 20%;
+  top: 40%;
 }
 </style>
