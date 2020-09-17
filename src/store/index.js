@@ -9,6 +9,11 @@ export default new Vuex.Store({
       {id: 0},
     ]
   },
+  getters: {
+    sacarid: state => {
+      return state.persona[0].id;
+    }
+  },
   mutations: {
     modificar(state, id){
       state.persona[0].id = id

@@ -12,11 +12,11 @@ $data = array();
 
 if($received_data->query != '')
 {
-	$query = "SELECT * FROM SEGUIMIENTOS WHERE SUCESO LIKE '%".$received_data->query."%' OR REQUERIMIENTO LIKE '%".$received_data->query."%' OR FECHA LIKE '%".$received_data->query."%' ORDER BY ID DESC";
+	$query = "SELECT * FROM SEGUIMIENTOS WHERE IDPERSONA = '".$received_data->usuario ."' AND (SUCESO LIKE '%".$received_data->query."%' OR REQUERIMIENTO LIKE '%".$received_data->query."%' OR FECHA LIKE '%".$received_data->query."%') ORDER BY FECHA DESC";
 }
 else
 {
-	$query = "SELECT * FROM SEGUIMIENTOS ORDER BY FECHA DESC";
+	$query = "SELECT * FROM SEGUIMIENTOS WHERE IDPERSONA = '".$received_data->usuario ."' ORDER BY FECHA DESC";
 }
 
 
