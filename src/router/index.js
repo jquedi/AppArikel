@@ -18,6 +18,11 @@ Vue.use(VueRouter)
       path: '/eventos',
       name: 'eventos',
       component: () => import(/* webpackChunkName: "about" */ '../views/eventos.vue')
+    },
+    {
+      path: '/alertas',
+      name: 'alertas',
+      component: () => import(/* webpackChunkName: "about" */ '../views/alertas.vue')
     }
 ]
 

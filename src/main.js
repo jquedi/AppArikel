@@ -6,6 +6,9 @@ import VueAxios from 'vue-axios'
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import store from './store'
+import Notifications from 'vue-notification'
+
+Vue.use(Notifications)
 
 window.$ = window.jQuery = require('jquery')
 
