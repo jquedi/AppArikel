@@ -10,6 +10,6 @@ $query = "DELETE FROM PERSONASEVENTO WHERE IDPERSONA = " .$received_data->usuari
 $consulta = mysql_query($query);
 
 
-echo "Se ha cancelado la solicitud al evento.";
+echo "Se ha dado de baja en el evento.";
 
 ?>
