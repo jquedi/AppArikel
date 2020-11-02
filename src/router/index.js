@@ -23,6 +23,11 @@ Vue.use(VueRouter)
       path: '/alertas',
       name: 'alertas',
       component: () => import(/* webpackChunkName: "about" */ '../views/alertas.vue')
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import(/* webpackChunkName: "about" */ '../views/admin.vue')
     }
 ]
 

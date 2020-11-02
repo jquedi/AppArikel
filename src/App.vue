@@ -46,6 +46,11 @@
               </button>
             </router-link>
           </li>
+          <li v-if="admin=='SI'">
+            <router-link to="/admin">
+              <button class="buttonMenu" id="admin">{{ opcion6 }}</button>
+            </router-link>
+          </li>
         </ul>
         <button id="desconectar">{{ opcion4 }}</button>
       </div>
@@ -107,6 +112,7 @@ export default {
       opcion3: "Eventos",
       opcion4: "Desconectar",
       opcion5: "Alertas",
+      opcion6: "Administrar",
       showMenu: false,
       moverB: false,
       login: false,
@@ -119,10 +125,17 @@ export default {
       alertasE: "",
       alertasA: this.$store.getters.AlertasCont,
       nodata: false,
+      admin: "",
+      alertasP: "",
+      alertasVer: "",
+      eventosP: "",
+      documentos: "",
+      seguimientos: "",
+      facturas: "",
     };
   },
   methods: {
-    ...mapMutations(["modificar", "modificarAlertas"]),
+    ...mapMutations(["modificar", "modificarAlertas", "modificarPermisos"]),
 
     toggleMenu() {
       (this.showMenu = !this.showMenu), (this.moverB = !this.moverB);
@@ -140,6 +153,33 @@ export default {
           if (this.id > 0) {
             this.login = !this.login;
             this.$store.commit("modificar", this.id);
+            axios
+              .post("php/permisosPropios.php", {
+                query: this.id,
+              })
+              .then((response) => {
+                var aux = response.data;
+
+                this.admin = aux[0][1];
+                this.alertasP = aux[0][2];
+                this.alertasVer = aux[0][3];
+                this.eventosP = aux[0][4];
+                this.documentos = aux[0][5];
+                this.seguimientos = aux[0][6];
+                this.facturas = aux[0][7];
+
+                this.$store.commit(
+                  "modificarPermisos",
+                  this.admin,
+                  this.alertasP,
+                  this.alertasVer,
+                  this.eventosP,
+                  this.documentos,
+                  this.seguimientos,
+                  this.facturas
+                );
+              });
+
             axios
               .post("php/contar.php", {
                 query: this.id,
@@ -364,7 +404,7 @@ ul {
 li {
   list-style-type: none;
   position: inherit;
-  height: 20%;
+  height: 16%;
   margin-left: 0px;
 }
 #menu1 {
