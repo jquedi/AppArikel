@@ -31,11 +31,11 @@ while($registro = mysql_fetch_array($consulta)){
 
 
 if($received_data->id > 0){
-    $query = "UPDATE SEGUIMIENTOS SET SUCESO = '".$received_data->suceso ."', ACTUACION = '" .$received_data->actuacion ."', ESTADO = 'PENDIENTE' WHERE ID = " .$received_data->id;
+    $query = "UPDATE SEGUIMIENTOS SET FECHA = '".$received_data->fecha ."', IDEXPEDIENTE = '".$expediente ."', IDPERSONA = '".$received_data->persona ."', IDANIMAL = '".$animal ."', REQUERIMIENTO = '".$received_data->requerimiento ."', TIPO = '".$received_data->tipo ."', CAMPO1 = '".$received_data->campo1 ."', ESTADO = '".$received_data->estado ."', SUCESO = '".$received_data->suceso ."', ACTUACION = '" .$received_data->actuacion ."' WHERE ID = " .$received_data->id;
 
     $consulta = mysql_query($query);
 }else{
-    $query = "INSERT INTO SEGUIMIENTOS (`REFERENCIA`, `FECHA`, `IDEXPEDIENTE`, `IDPERSONA`, `IDANIMAL`, `REQUERIMIENTO`, `SUCESO`, `ACTUACION`, `TIPO`, `CAMPO1`, `CAMPO2`, `CAMPO3`, `ESTADO`) VALUES ('','".$received_data->fecha ."','".$expediente ."','".$received_data->persona ."','".$animal ."','".$received_data->requerimiento ."','".$received_data->suceso ."','".$received_data->actuacion ."','".$received_data->tipo ."','".$received_data->campo1 ."','','','PENDIENTE')";
+    $query = "INSERT INTO SEGUIMIENTOS (`REFERENCIA`, `FECHA`, `IDEXPEDIENTE`, `IDPERSONA`, `IDANIMAL`, `REQUERIMIENTO`, `SUCESO`, `ACTUACION`, `TIPO`, `CAMPO1`, `CAMPO2`, `CAMPO3`, `ESTADO`) VALUES ('','".$received_data->fecha ."','".$expediente ."','".$received_data->persona ."','".$animal ."','".$received_data->requerimiento ."','".$received_data->suceso ."','".$received_data->actuacion ."','".$received_data->tipo ."','".$received_data->campo1 ."','','','".$received_data->estado ."')";
 
     $consulta = mysql_query($query);
 }

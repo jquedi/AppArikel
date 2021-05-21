@@ -5,47 +5,58 @@ include("conect.php");
 $received_data = json_decode(file_get_contents("php://input"));
 
 $data = array();
-$filtro = "";
 
-if($received_data->animal != ""){
-	$filtro = $filtro ." OR IDANIMAL = " .$received_data->animal;
+$opcion = $received_data->opcion;
+$cat = $received_data->permiso;
+$id = $received_data->id;
+
+
+if($cat != "EDITAR"){
+    $filtro = " AND (IDPERSONA = 0 OR IDPERSONA = " .$id .") AND (EXPEDIENTE IN (SELECT IDEXPEDIENTE FROM `PERSONASEXPEDIENTE` WHERE `IDPERSONA` = " .$id ." AND ESTADO = 'ACTIVO') OR EXPEDIENTE = 0) AND (IDEVENTO = 0 OR IDEVENTO IN (SELECT IDEVENTO FROM `PERSONASEVENTO` WHERE `IDPERSONA` = " .$id ." AND ESTADO = 'ADMITIDO')) AND (IDANIMAL = 0 OR IDANIMAL IN (SELECT IDANIMAL FROM `ANIMALESEXPEDIENTE` WHERE IDEXPEDIENTE IN (SELECT `IDEXPEDIENTE` FROM `PERSONASEXPEDIENTE` WHERE `IDPERSONA` = " .$id ." AND ESTADO = 'ACTIVO')))";
 }
-if($received_data->evento != ""){
-	$filtro = $filtro ." OR IDEVENTO = " .$received_data->evento;
-}
-if($received_data->expediente != ""){
-	$filtro = $filtro ." OR EXPEDIENTE = " .$received_data->expediente;
-}
-
-$query1 = "SELECT * FROM DOCUMENTO WHERE TIPO = 2 OR TIPO = 4 IDPERSONA = ".$received_data->usuario ." AND ESTADO = 'ACTIVO'";
-
-$consulta1 = mysql_query($query1);
-
-$resultado1 = "";
-
-while($registro1 = mysql_fetch_array($consulta1)){
-	$resultado1=$registro1["IDEXPEDIENTE"];
-	
+if($cat == "EDITAR"){
+    $filtro = "";
 }
 
-$query = "SELECT IDANIMAL FROM ANIMALESEXPEDIENTE WHERE IDEXPEDIENTE = '".$resultado1 ."' AND ESTADO = 'TRABAJANDO'";
 
-$consulta = mysql_query($query);
+
+if($received_data->query != '')
+{
+    $busca = " AND DOCUMENTO LIKE '%".$received_data->query."%'";
+}
+else
+{
+    $busca = "";
+}
+
+
+
+
+
+if($opcion == "publicos"){
+    $query = "SELECT * FROM DOCUMENTO WHERE TIPO = 4" .$busca;
+}
+if($opcion == "propios"){
+    $query = "SELECT * FROM DOCUMENTO WHERE IDPERSONA = " .$id .$busca;
+}
+if($opcion == "privados"){
+    $query = "SELECT * FROM DOCUMENTO WHERE TIPO = 1" .$busca;
+}
+if($opcion == "formacion"){
+    $query = "SELECT * FROM DOCUMENTO WHERE TIPO = 3" .$filtro .$busca;
+}
+if($opcion == "operativos"){
+    $query = "SELECT * FROM DOCUMENTO WHERE TIPO = 2" .$filtro .$busca;
+}
 
 $resultado = array();
 
-while($registro = mysql_fetch_array($consulta)){
-    $resultado[]=$registro["IDANIMAL"];
-    
-    $query2 = "SELECT * FROM ANIMALES WHERE ID = ".$registro['IDANIMAL'];
-    $consulta2 = mysql_query($query2);
+$consulta = mysql_query($query);
 
-    while($registro2 = mysql_fetch_array($consulta2)){
-        $resultado2[]=$registro2;
-    }
-	
+while($registro = mysql_fetch_array($consulta)){
+    $resultado[]=$registro;
 }
 
-echo json_encode($resultado2);
+echo json_encode($resultado);
 
 ?>

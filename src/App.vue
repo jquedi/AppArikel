@@ -2,19 +2,137 @@
   <div id="app">
     <div id="cabecera">
       <button
+        class="botonCabecera"
+        @click="opcionesG = true"
+        v-if="opcion == 'vs'"
+      >
+        Arikel VS
+      </button>
+      <button
+        class="botonCabecera"
+        @click="opcionesG = true"
+        v-if="opcion == 'mant'"
+        style="font-size: 15px"
+      >
+        Arikel Mantenimiento
+      </button>
+      <button
+        class="botonCabecera"
+        @click="opcionesG = true"
+        v-if="opcion == 'fac'"
+        style="font-size: 25px"
+      >
+        Arikel Facturas
+      </button>
+
+      <div v-if="opcionesG && (mantenimiento == 'SI' || facturas != 'NINGUNO')">
+        <div class="fondoNegro" @click="opcionesG = false"></div>
+        <div class="divbotonCabecera2">
+          <div class="row">
+            <div class="col">
+              <button class="botonCabecera2" @click="cambiar('vs')">
+                Arikel VS
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button
+                class="botonCabecera2"
+                @click="cambiar('mant')"
+                v-if="mantenimiento == 'SI'"
+              >
+                Arikel Mantenimiento
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button
+                class="botonCabecera2"
+                @click="cambiar('fac')"
+                v-if="facturas == 'EDITAR' || facturas == 'VER'"
+              >
+                Arikel Facturas
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button
         id="desplegarMenu"
         :style="btnStyles"
         @click="toggleMenu"
         :class="setButtonVisibility"
-      ></button>
-
-      <h1 style="font-weight: 800">Arikel VS</h1>
+      >
+        <div class="hamburguesa" :style="burguer1"></div>
+        <div class="hamburguesa" style="top: 50%" :style="burguer2"></div>
+        <div class="hamburguesa" style="top: 75%" :style="burguer3"></div>
+      </button>
     </div>
     <transition name="fade">
-      <div id="menu1" v-if="showMenu">
+      <div id="menu1" v-if="showMenu && opcion == 'mant'">
         <ul id="UlMenu" style="max-width: 200px">
           <li style="margin-top: 75px">
-            <router-link to="/">
+            <router-link to="/animales">
+              <button class="buttonMenu" id="documentos">{{ opcion1m }}</button>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/instalaciones">
+              <button class="buttonMenu" id="documentos" @click="alertasI = ''">
+                <span>{{ opcion2m }}</span>
+                <span v-if="nodata" class="badge">{{ alertasI }}</span>
+              </button>
+            </router-link>
+          </li>
+          <li  v-if="opcion == 'horario'">
+            <!-- Desabilitado -->
+            <router-link to="/horario">
+              <button class="buttonMenu" id="documentos">{{ opcion3m }}</button>
+            </router-link>
+          </li>
+        </ul>
+
+        <button
+          id="desconectar"
+          onclick="location.href='http://app.arikelk9.es/'"
+        >
+          {{ opcion4 }}
+        </button>
+      </div>
+
+
+      
+      <div id="menu1" v-if="showMenu && opcion == 'fac'">
+        <ul id="UlMenu" style="max-width: 200px">
+          <li style="margin-top: 75px">
+            <router-link to="/facturas">
+              <button class="buttonMenu" id="documentos">{{ opcion1f }}</button>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/graficas">
+              <button class="buttonMenu" id="documentos">
+                <span>{{ opcion2f }}</span>
+              </button>
+            </router-link>
+          </li>
+        </ul>
+
+        <button
+          id="desconectar"
+          onclick="location.href='http://app.arikelk9.es/'"
+        >
+          {{ opcion4 }}
+        </button>
+      </div>
+
+      <div id="menu1" v-if="showMenu && opcion == 'vs'">
+        <ul id="UlMenu" style="max-width: 200px">
+          <li style="margin-top: 75px">
+            <router-link to="/seguimientos">
               <button
                 class="buttonMenu"
                 id="seguimientos"
@@ -25,12 +143,12 @@
               </button>
             </router-link>
           </li>
-          <li>
+          <li v-if="documentos == 'EDITAR' || documentos == 'VER'">
             <router-link to="/documentos">
               <button class="buttonMenu" id="documentos">{{ opcion2 }}</button>
             </router-link>
           </li>
-          <li>
+          <li v-if="eventosP == 'EDITAR' || eventosP == 'VER'">
             <router-link to="/eventos">
               <button class="buttonMenu" id="eventos" @click="alertasE = ''">
                 <span>{{ opcion3 }}</span>
@@ -38,7 +156,7 @@
               </button>
             </router-link>
           </li>
-          <li>
+          <li v-if="alertasP == 'EDITAR' || alertasP == 'VER'">
             <router-link to="/alertas">
               <button class="buttonMenu" id="alertas">
                 <span>{{ opcion5 }}</span>
@@ -46,20 +164,27 @@
               </button>
             </router-link>
           </li>
-          <li v-if="admin=='SI'">
+          <li v-if="admin === 'SI'">
             <router-link to="/admin">
               <button class="buttonMenu" id="admin">{{ opcion6 }}</button>
             </router-link>
           </li>
         </ul>
-        <button id="desconectar">{{ opcion4 }}</button>
+
+        <button
+          id="desconectar"
+          onclick="location.href='http://app.arikelk9.es/'"
+        >
+          {{ opcion4 }}
+        </button>
       </div>
     </transition>
+
     <transition name="fade">
       <div id="ennegrecido" v-if="showMenu" @click="toggleMenu"></div>
     </transition>
     <transition name="fade">
-      <div id="log" v-if="!login">
+      <div id="log" v-if="!loggedIn">
         <img id="logo" src="imagenes/Logo.PNG" alt />
         <div class="form">
           <h2>Iniciar sesión</h2>
@@ -89,7 +214,7 @@
         </div>
       </div>
     </transition>
-    <router-view v-if="id > 0" style="margin-top: 80px" />
+    <router-view style="margin-top: 80px" />
 
     <notifications group="foo" position="bottom right" />
   </div>
@@ -104,6 +229,11 @@ export default {
   components: {},
   created() {
     //axios
+    // console.log("valor de login", this.login);
+    // // this.prueba();
+    // if (!this.login) {
+    //   this.$router.push("/");
+    // }
   },
   data() {
     return {
@@ -115,34 +245,84 @@ export default {
       opcion6: "Administrar",
       showMenu: false,
       moverB: false,
-      login: false,
+      // login: false,
       datosPhp: [{}, {}],
-      desplazar: 150,
+      desplazar: 0,
       usuario: "",
       contraseña: "",
       id: 0,
       alertasS: "",
       alertasE: "",
+      alertasI: "",
       alertasA: this.$store.getters.AlertasCont,
       nodata: false,
-      admin: "",
+      admin: "NO",
       alertasP: "",
       alertasVer: "",
       eventosP: "",
       documentos: "",
       seguimientos: "",
+      seguimientosT: "",
       facturas: "",
+
+      privadosPermiso: "",
+      formacionPermiso: "",
+      operativosPermiso: "",
+
+      mantenimiento: "NO",
+      opcion: "vs",
+      opcionesG: false,
+
+      opcion1m: "Animales",
+      opcion2m: "Instalaciones",
+      opcion3m: "Horario",
+
+      opcion1f: "Facturas",
+      opcion2f: "Graficas",
     };
   },
   methods: {
     ...mapMutations(["modificar", "modificarAlertas", "modificarPermisos"]),
+
+    cambiar(aux) {
+      this.opcion = aux;
+      this.opcionesG = false;
+
+      if (aux == "vs") {
+        this.$router.push("/seguimientos");
+      }
+      if (aux == "mant") {
+        this.$router.push("/animales");
+      }
+      if (aux == "fac") {
+        this.$router.push("/facturas");
+      }
+    },
 
     toggleMenu() {
       (this.showMenu = !this.showMenu), (this.moverB = !this.moverB);
 
       this.alertasCont(1);
     },
+    // prueba(){
+    //   this.$store.commit(
+    //               "modificarPermisos",
+    //               {admin: this.admin,
+    //               alertasP: this.alertasP,
+    //               alertasVer: this.alertasVer,
+    //               eventosP: this.eventosP,
+    //               documentos: this.documentos,
+    //               seguimientos: this.seguimientos,
+    //               facturas: this.facturas}
+    //             );
+    // },
     iniciarsesion() {
+      // this.login = !this.login;
+
+      // console.log("valor de login despues de pulsar", this.login);
+
+      // this.$router.push("/seguimientos");
+
       axios
         .post("php/login.php", {
           query: this.usuario,
@@ -151,7 +331,10 @@ export default {
         .then((response) => {
           this.id = response.data;
           if (this.id > 0) {
-            this.login = !this.login;
+            // this.login = !this.login;
+
+            this.$router.push("/seguimientos");
+
             this.$store.commit("modificar", this.id);
             axios
               .post("php/permisosPropios.php", {
@@ -167,39 +350,49 @@ export default {
                 this.documentos = aux[0][5];
                 this.seguimientos = aux[0][6];
                 this.facturas = aux[0][7];
+                this.mantenimiento = aux[0][11];
 
-                this.$store.commit(
-                  "modificarPermisos",
-                  this.admin,
-                  this.alertasP,
-                  this.alertasVer,
-                  this.eventosP,
-                  this.documentos,
-                  this.seguimientos,
-                  this.facturas
-                );
-              });
+                this.privadosPermiso = aux[0][8];
+                this.formacionPermiso = aux[0][9];
+                this.operativosPermiso = aux[0][10];
+                this.seguimientosT = aux[0][12];
 
-            axios
-              .post("php/contar.php", {
-                query: this.id,
-              })
-              .then((response) => {
-                var aux = response.data;
-                this.cargarEventosCont();
-                this.alertasCont(0);
-                if (aux > 0) {
-                  this.alertasS = aux;
-                  this.$notify({
-                    group: "foo",
-                    title: "REQUERIDOS PENDIENTES",
-                    text: "Tiene " + aux + " REQUERIDOS sin atender.",
-                    type: "warn",
-                    duration: 4000,
+                this.$store.commit("modificarPermisos", {
+                  admin: this.admin,
+                  alertasP: this.alertasP,
+                  alertasVer: this.alertasVer,
+                  eventosP: this.eventosP,
+                  documentos: this.documentos,
+                  seguimientos: this.seguimientos,
+                  facturas: this.facturas,
+                  privadosPermiso: this.privadosPermiso,
+                  formacionPermiso: this.formacionPermiso,
+                  operativosPermiso: this.operativosPermiso,
+                  seguimientosT: this.seguimientosT,
+                });
+
+                axios
+                  .post("php/contar.php", {
+                    query: this.id,
+                  })
+                  .then((response) => {
+                    var aux = response.data;
+                    this.cargarEventosCont();
+                    this.alertasCont(0);
+                    this.cargarInstalaciones();
+                    if (aux > 0) {
+                      this.alertasS = aux;
+                      this.$notify({
+                        group: "foo",
+                        title: "REQUERIDOS PENDIENTES",
+                        text: "Tiene " + aux + " REQUERIDOS sin atender.",
+                        type: "warn",
+                        duration: 4000,
+                      });
+                    } else {
+                      this.alertasS = "";
+                    }
                   });
-                } else {
-                  this.alertasS = "";
-                }
               });
           } else {
             alert("Usuario y/o contraseña no validos");
@@ -207,24 +400,48 @@ export default {
         });
     },
     cargarEventosCont() {
-      axios
-        .post("php/eventosDisponibles.php", {
-          usuario: this.id,
-        })
-        .then((response) => {
-          var aux = response.data.length;
-          if (aux > 0) {
-            this.alertasE = aux;
-            this.$notify({
-              group: "foo",
-              title: "EVENTOS",
-              text: "Hay " + aux + " eventos a los que se puede apuntar.",
-              duration: 4000,
-            });
-          } else {
-            this.alertasE = "";
-          }
-        });
+      if (this.eventosP == "VER" || this.eventosP == "EDITAR") {
+        axios
+          .post("php/eventosDisponibles.php", {
+            usuario: this.id,
+          })
+          .then((response) => {
+            var aux = response.data.length;
+            if (aux > 0) {
+              this.alertasE = aux;
+              this.$notify({
+                group: "foo",
+                title: "EVENTOS",
+                text: "Hay " + aux + " eventos a los que se puede apuntar.",
+                duration: 4000,
+              });
+            } else {
+              this.alertasE = "";
+            }
+          });
+      }
+    },
+    cargarInstalaciones() {
+      if (this.mantenimiento == "SI") {
+        axios
+          .post("php/tareasAnimalesActivas.php", {
+            query: -1,
+          })
+          .then((response) => {
+            var aux = response.data.length;
+            if (aux > 0) {
+              this.alertasI = aux;
+              this.$notify({
+                group: "foo",
+                title: "TAREAS",
+                text: "Hay " + aux + " tareas sin hacer en las instalaciones.",
+                duration: 4000,
+              });
+            } else {
+              this.alertasI = "";
+            }
+          });
+      }
     },
     alertasCont(vez) {
       axios
@@ -253,14 +470,54 @@ export default {
           }
         });
     },
+    desconectarF() {
+      this.$router.go();
+    },
+
+    widthDiv() {
+      var elmnt = document.getElementById("cabecera");
+      var elmnt2 = document.getElementById("desplegarMenu");
+      if (elmnt.offsetWidth * 0.4 > 200) {
+        var width = 200;
+      } else {
+        width = elmnt.offsetWidth * 0.4;
+      }
+      var aux = width - (20 + elmnt2.offsetWidth);
+      return aux;
+    },
   },
   computed: {
     ...mapState(["persona"]),
 
+    loggedIn() {
+      return this.$store.state.id > 0;
+    },
+
     btnStyles() {
       if (this.moverB)
         return {
-          transform: `translateX(${this.desplazar}px)`,
+          transform: `translateX(${this.widthDiv()}px)`,
+        };
+      else return "";
+    },
+    burguer1() {
+      if (this.moverB)
+        return {
+          transform: `rotateZ(-25deg) translateY(0px) translateX(-3px)`,
+        };
+      else return "";
+    },
+    burguer2() {
+      if (this.moverB)
+        return {
+          transform: `rotateZ(90deg) translateY(-9px) translateX(-1px)`,
+        };
+      else return "";
+    },
+    burguer3() {
+      if (this.moverB)
+        return {
+          transform: `rotateZ(30deg) translateY(-1px) translateX(-4px)`,
         };
       else return "";
     },
@@ -273,6 +530,44 @@ export default {
 </script>
 
 <style scoped>
+.botonCabecera2 {
+  background: none;
+  width: 220px;
+  margin-top: 20px;
+  border: solid;
+  border-color: darkgrey;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: 800;
+  background-color: gainsboro;
+}
+.divbotonCabecera2 {
+  width: 80%;
+  background: white;
+  z-index: 11000;
+  position: fixed;
+  right: 10%;
+  top: 10%;
+  padding-bottom: 20px;
+  border-radius: 10px;
+}
+.botonCabecera {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 800;
+  font-size: 38px;
+}
+.hamburguesa {
+  width: 80%;
+  height: 10%;
+  background: #8989b1;
+  top: 25%;
+  border-radius: 20px;
+  position: absolute;
+  left: 10%;
+  transition: 1s;
+}
 #logo {
   position: fixed;
   bottom: 0;
@@ -393,6 +688,16 @@ export default {
   right: 0;
   z-index: 2000;
 }
+.fondoNegro {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: #00000052;
+  float: right;
+  top: 0;
+  right: 0;
+  z-index: 10000;
+}
 
 ul {
   height: 100%;
@@ -455,12 +760,17 @@ li {
   color: #f3f3f3;
 }
 #desplegarMenu {
-  position: fixed;
-  left: 10px;
+  position: absolute;
+  right: 0px;
+  left: 20px;
   height: 35px;
   width: 35px;
   transition: 1s;
   top: 20px;
+  padding: 0;
+  border-radius: 7px;
+  background: aliceblue;
+  border-color: aliceblue;
 }
 #divlog {
   position: fixed;

@@ -2,12 +2,58 @@
   <div class="container" id="alertasC">
     <h1>ALERTAS</h1>
     <button
+      v-if="permisoAlertasP === 'EDITAR'"
       id="botonNuevo"
       class="btn btn-success"
       @click="cerrarFormularion(true)"
     >
       Nueva
     </button>
+
+    <div class="row" v-if="permisoAlertasVer == 'TODOS'">
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-sm-6 text marginBottom">
+            <label for="persona">Personas</label>
+            <input
+              class="form-control input text"
+              id="persona"
+              type="text"
+              v-model="queryP"
+              @keyup="cargarPersonas2()"
+            />
+          </div>
+          <div class="col-sm-6 text marginBottom">
+            <button v-if="verTodas == false"
+              class="btn btn-primary"
+              @click="verTodasF(), (verTodas = true)"
+            >
+              Ver Todas
+            </button>
+            <button v-if="verTodas == true" class="btn btn-primary" @click="verTodas = false">
+              No Ver Todas
+            </button>
+          </div>
+        </div>
+        <div class="col marginBottom">
+          <select
+            class="form-control input text"
+            v-model="idNuevo"
+            @change="alertasPendientes(), date_function(), alertasPasadas()"
+          >
+            <option
+              v-for="(persona, index) in personas2"
+              v-bind:key="index"
+              v-bind:value="persona.ID"
+            >
+              {{ persona.NOMBRE }} {{ persona.APELLIDO1 }}
+              {{ persona.APELLIDO2 }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="formularioNueva panel panel-default" v-if="nuevoF">
       <button
         id="cerrarF"
@@ -57,6 +103,28 @@
           />
         </div>
       </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="expediente2">Expediente</label>
+          <select
+            class="form-control input"
+            id="expediente2"
+            v-model="expediente"
+            @change="cargarPersonas()"
+          >
+            <option value=""></option>
+            <option
+              v-for="expediente in expedientes"
+              v-bind:key="expediente.ID"
+              v-bind:value="expediente.ID"
+            >
+              {{ expediente.DESCRIPCION }}
+            </option>
+          </select>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col">
           <label for="todos">TODOS</label>
@@ -76,7 +144,7 @@
             v-bind:value="persona.ID"
             v-model="checkedNames"
           />
-          <label class="labelNombre"
+          <label class="labelNombre text"
             >{{ persona.NOMBRE }} {{ persona.APELLIDO1 }}
             {{ persona.APELLIDO2 }}</label
           >
@@ -84,29 +152,91 @@
       </div>
       <span>Total seleccionado: {{ checkedNames.length }}</span>
 
-      <button id="crearF" class="btn btn-success" @click="guardarAlerta()">
+      <button
+        id="crearF"
+        class="btn btn-success"
+        @click="
+          guardarAlerta(), alertasPendientes(), alertasPasadas(), verTodasF()
+        "
+      >
         CREAR
       </button>
     </div>
-    <div class="alerta" v-if="vacio">
-      NO TIENE ALERTAS PENDIENTES
+
+    <div v-if="verTodas == false">
+      <div class="alerta text" v-if="vacio">NO TIENE ALERTAS PENDIENTES</div>
+      <div v-for="(alerta, index) in alertas" v-bind:key="index">
+        <div class="alerta" :style="btnStyles(alerta.HASTA)">
+          <table>
+            <tr>
+              <td class="fecha">{{ alerta.HASTA }}</td>
+              <td>{{ alerta.ALERTA }}</td>
+              <td class="cerrar">
+                <button
+                  @click="cerrarAlerta(alerta, index)"
+                  style="background: none; border: none; color: white"
+                >
+                  X
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="text">Alertas Pasadas</h3>
+
+      <div v-for="(alerta, index) in alertas2" v-bind:key="index">
+        <div class="alertaPasada">
+          <table>
+            <tr>
+              <td class="fecha">{{ alerta.HASTA }}</td>
+              <td class="descripcionPasadas">{{ alerta.ALERTA }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
     </div>
-    <div v-for="(alerta, index) in alertas" v-bind:key="index">
-      <div class="alerta" :style="btnStyles(alerta.HASTA)">
-        <table>
-          <tr>
-            <td class="fecha">{{ alerta.HASTA }}</td>
-            <td>{{ alerta.ALERTA }}</td>
-            <td class="cerrar">
-              <button
-                @click="cerrarAlerta(alerta, index)"
-                style="background: none; border: none; color: white"
+
+    <div v-if="verTodas == true">
+      <div v-for="(persona, index) in personas2" v-bind:key="index">
+        <div
+          class="row"
+          style="border-bottom: solid; border-width: 2px; padding: 10px"
+        >
+          <div
+            class="col-sm-3"
+            style="border-right: solid; text-align: end; font-weight: 600"
+          >
+            {{ persona.NOMBRE }} <br />
+            {{ persona.APELLIDO1 }} {{ persona.APELLIDO2 }}
+          </div>
+          <div class="col-sm-9">
+            <div v-for="(alerta, index) in alertas3" v-bind:key="index">
+              <div
+                v-if="alerta.IDPERSONA == persona.ID"
+                class="alerta"
+                :style="btnStyles(alerta.HASTA)"
               >
-                X
-              </button>
-            </td>
-          </tr>
-        </table>
+                <table>
+                  <tr>
+                    <td class="fecha">{{ alerta.HASTA }}</td>
+                    <td>{{ alerta.IDPERSONA }}</td>
+                    <td>{{ alerta.ALERTA }}</td>
+                    <td class="cerrar">
+                      <button
+                        @click="cerrarAlerta2(alerta, index)"
+                        style="background: none; border: none; color: white"
+                      >
+                        X
+                      </button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -126,15 +256,23 @@ export default {
   },
   computed: {
     ...mapState(["persona"]),
+    // ...mapGetters(["sacarid"], ["permisoAlertasP"], ["permisoAlertasVer"]),
+    ...mapGetters({
+      idUsuario: "sacarid",
+      permisoAlertasP: "permisoAlertasP",
+      permisoAlertasVer: "permisoAlertasVer",
+    }),
   },
   methods: {
-    ...mapGetters(["sacarid"]),
     ...mapMutations(["reducirAlertas"]),
 
     alertasPendientes: function () {
+      if (this.idNuevo == 0) {
+        this.idNuevo = this.idUsuario;
+      }
       axios
         .post("php/alertas.php", {
-          usuario: this.idUsuario,
+          usuario: this.idNuevo,
         })
         .then((response) => {
           if (response.data.length > 0) {
@@ -145,6 +283,31 @@ export default {
             this.vacio = true;
           }
         });
+    },
+    alertasPasadas: function () {
+      if (this.idNuevo == 0) {
+        this.idNuevo = this.idUsuario;
+      }
+      axios
+        .post("php/alertasPasadas.php", {
+          usuario: this.idNuevo,
+        })
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.alertas2 = response.data;
+          } else {
+            this.alertas2 = "";
+          }
+        });
+    },
+    verTodasF: function () {
+      axios.post("php/alertasTodas.php", {}).then((response) => {
+        if (response.data.length > 0) {
+          this.alertas3 = response.data;
+        } else {
+          this.alertas3 = "";
+        }
+      });
     },
     cerrarAlerta(alerta, index) {
       axios
@@ -159,6 +322,23 @@ export default {
           });
           this.alertas.splice(index, 1);
           this.$store.commit("reducirAlertas");
+          this.alertasPasadas();
+        });
+    },
+    cerrarAlerta2(alerta, index) {
+      axios
+        .post("php/borrarAlerta.php", {
+          idAlerta: alerta.ID,
+        })
+        .then((response) => {
+          this.$notify({
+            group: "foo",
+            title: response.data,
+            type: "success",
+          });
+          this.alertas3.splice(index, 1);
+          this.alertasPendientes();
+          this.alertasPasadas();
         });
     },
     personasID(todos) {
@@ -176,9 +356,19 @@ export default {
       axios
         .post("php/listaPersonas.php", {
           query: this.query,
+          expediente: this.expediente,
         })
         .then((response) => {
           this.personas = response.data;
+        });
+    },
+    cargarPersonas2: function () {
+      axios
+        .post("php/listaPersonas.php", {
+          query: this.queryP,
+        })
+        .then((response) => {
+          this.personas2 = response.data;
         });
     },
     cerrarFormularion(opcion) {
@@ -218,6 +408,13 @@ export default {
           this.nuevoF = false;
         });
     },
+
+    cargarExpedientes: function () {
+      axios.post("php/expedientesFULL.php", {}).then((response) => {
+        this.expedientes = response.data;
+      });
+    },
+
     date_function: function () {
       this.fecha = new Date().toJSON().slice(0, 10).replace(/-/g, "-");
 
@@ -253,7 +450,7 @@ export default {
     return {
       trackedDate: new Date().toISOString().substr(0, 10),
       subtitulo: "Ejemplo de texto",
-      idUsuario: this.$store.getters.sacarid,
+      // idUsuario: this.sacarid,
       alertas: "",
       vacio: true,
       nuevoF: false,
@@ -271,15 +468,35 @@ export default {
       añoA: "",
       tomorrow: "",
       tomorrow2: "",
+      // permisos: this.permisoAlertasP,
+      // permisos2: this.permisoAlertasVer,
+      queryP: "",
+      personas2: "",
+      expediente: "",
+      expedientes: "",
+      idNuevo: 0,
+      alertas2: "",
+      alertas3: "",
+      verTodas: false,
     };
   },
   created: function () {
     this.alertasPendientes();
+    this.verTodasF();
+    this.alertasPasadas();
     this.date_function();
+    this.cargarPersonas2();
+    this.cargarExpedientes();
   },
 };
 </script>
 <style scoped>
+.text {
+  font-size: 3vmin;
+}
+.marginBottom {
+  margin-bottom: 3%;
+}
 .labelNombre {
   font-size: 3vmin;
   display: inline;
@@ -287,14 +504,15 @@ export default {
 }
 #crearF {
   position: absolute;
-  right: 0;
+  right: 5%;
   z-index: 5000;
   margin-top: 30px;
+  font-size: 4vmin;
 }
 #cerrarF {
-  position: fixed;
-  top: 0;
-  right: 0;
+  position: absolute;
+  top: 1%;
+  right: 5%;
   z-index: 5000;
 }
 .formularioNueva {
@@ -306,6 +524,9 @@ export default {
   top: 0;
   left: 0;
   overflow: scroll;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 5%;
 }
 table {
   width: 100%;
@@ -340,5 +561,23 @@ table {
   float: right;
   margin-bottom: 3%;
   font-size: 4vmin;
+}
+.descripcionPasadas {
+  border-left: solid;
+  border-width: 1px;
+  border-color: #000;
+  width: 80%;
+  max-width: 10px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.alertaPasada {
+  width: 90%;
+  margin: auto;
+  background: #bebebe;
+  border-radius: 20px;
+  display: flex;
+  font-size: 3vmin;
+  margin-bottom: 2%;
 }
 </style>

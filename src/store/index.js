@@ -5,72 +5,90 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    persona: [
-      {id: 0},
-      {eventos: 0},
-      {alertas: 0},
-      {admin: ""},
-      {alertasP: ""},
-      {alertasVer: ""},
-      {eventosP: ""},
-      {documentos: ""},
-      {seguimientos: ""},
-      {facturas: ""},
-    ]
+      id: 0,
+      eventos: 0,
+      alertas: 0,
+      admin: "NO",
+      alertasP: "",
+      alertasVer: "",
+      eventosP: "",
+      documentos: "",
+      seguimientos: "",
+      seguimientosT: "",
+      facturas: "",
+      privadosPermiso: "",
+      formacionPermiso: "",
+      operativosPermiso: "",
   },
   getters: {
+    docuPermisoPrivado: state => {
+      return state.privadosPermiso;
+    },
+    docuPermisoFormacion: state => {
+      return state.formacionPermiso;
+    },
+    docuPermisoOperativo: state => {
+      return state.operativosPermiso;
+    },
     sacarid: state => {
-      return state.persona[0].id;
+      return state.id;
     },
     eventosD: state => {
-      return state.persona[0].eventos;
+      return state.eventos;
     },
     AlertasCont: state => {
-      return state.persona[0].alertas;
+      return state.alertas;
     },
     permisoAdmin: state => {
-      return state.persona[0].admin;
+      return state.admin;
     },
     permisoAlertasP: state => {
-      return state.persona[0].alertasP;
+      return state.alertasP;
     },
     permisoAlertasVer: state => {
-      return state.persona[0].alertasVer;
+      return state.alertasVer;
     },
     permisoEventosP: state => {
-      return state.persona[0].eventosP;
+      return state.eventosP;
     },
     permisoDocumentos: state => {
-      return state.persona[0].documentos;
+      return state.documentos;
     },
     permisoSeguimientos: state => {
-      return state.persona[0].seguimientos;
+      return state.seguimientos;
+    },
+    permisoSeguimientosT: state => {
+      return state.seguimientosT;
     },
     permisoFacturas: state => {
-      return state.persona[0].facturas;
+      return state.facturas;
     },
   },
   mutations: {
     modificar(state, id){
-      state.persona[0].id = id
+      state.id = id
     },
     modificarEvento(state, eventos){
-      state.persona[0].eventos = eventos
+      state.eventos = eventos
     },
     modificarAlertas(state, alertas){
-      state.persona[0].alertas = alertas
+      state.alertas = alertas
     },
     reducirAlertas(state){
-      state.persona[0].alertas = (state.persona[0].alertas - 1)
+      state.alertas = (state.alertas - 1)
     },
-    modificarPermisos(state, admin, alertasP, alertasVer, eventosP, documentos, seguimientos, facturas){
-      state.persona[0].admin = admin
-      state.persona[0].alertasP = alertasP
-      state.persona[0].alertasVer = alertasVer
-      state.persona[0].eventosP = eventosP
-      state.persona[0].documentos = documentos
-      state.persona[0].seguimientos = seguimientos
-      state.persona[0].facturas = facturas
+    modificarPermisos(state, {admin, alertasP, alertasVer, eventosP, documentos, seguimientos, facturas, privadosPermiso, formacionPermiso, operativosPermiso, seguimientosT}){
+      state.admin = admin,
+      state.alertasP = alertasP,
+      state.alertasVer = alertasVer,
+      state.eventosP = eventosP,
+      state.documentos = documentos,
+      state.seguimientos = seguimientos,
+      state.facturas = facturas,
+      state.privadosPermiso = privadosPermiso,
+      state.formacionPermiso = formacionPermiso,
+      state.operativosPermiso = operativosPermiso,
+      state.seguimientosT = seguimientosT
     },
   },
   actions: {

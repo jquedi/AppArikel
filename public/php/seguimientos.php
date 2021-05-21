@@ -1,9 +1,4 @@
 <?php
-
-//action.php
-
-/*$connect = new PDO("mysql:host=rdbms.strato.de; dbname=DB4245417", "U4245417", "George21444267");*/
-
 include("conect.php");
 
 $received_data = json_decode(file_get_contents("php://input"));
@@ -15,9 +10,12 @@ $filtro = "";
 if($received_data->tipo != ""){
 	$filtro = $filtro ." AND TIPO = '" .$received_data->tipo ."'";
 }
-if($received_data->fecha != ""){
-	$filtro = $filtro ." AND FECHA = '" .$received_data->fecha ."'";
+
+if($received_data->fecha != "" && $received_data->fecha2 != ""){
+	$filtro = $filtro ." AND (FECHA BETWEEN '" .$received_data->fecha ."' AND '" .$received_data->fecha2 ."')";
 }
+
+
 if($received_data->expediente != ""){
 	$query = "SELECT ID FROM EXPEDIENTES WHERE DESCRIPCION = '".$received_data->expediente ."'";
 

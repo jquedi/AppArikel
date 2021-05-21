@@ -6,7 +6,13 @@ $received_data = json_decode(file_get_contents("php://input"));
 
 $data = array();
 
-$query = "SELECT * FROM SEGUIMIENTOTIPO WHERE GUIAS != '".$received_data->query ."'";
+
+if($received_data->query == "GUIA"){
+	$query = "SELECT * FROM SEGUIMIENTOTIPO WHERE GUIAS = 'SI'";
+}else{
+	$query = "SELECT * FROM SEGUIMIENTOTIPO";
+}
+
 
 $consulta = mysql_query($query);
 

@@ -6,7 +6,7 @@ $received_data = json_decode(file_get_contents("php://input"));
 
 $data = array();
 
-$query = "SELECT * FROM EVENTOS WHERE ESTADO = 'ABIERTA INSCRIPCIÓN' AND ID NOT IN (SELECT IDEVENTO FROM PERSONASEVENTO WHERE IDPERSONA = " .$received_data->usuario .") ORDER BY INICIO DESC";
+$query = "SELECT * FROM EVENTOS WHERE ESTADO = 'ABIERTA INSCRIPCIÓN' AND ACTIVO = 'SI' AND ID NOT IN (SELECT IDEVENTO FROM PERSONASEVENTO WHERE IDPERSONA = " .$received_data->usuario .") ORDER BY INICIO DESC";
 
 $consulta = mysql_query($query);
 

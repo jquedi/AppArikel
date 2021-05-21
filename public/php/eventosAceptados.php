@@ -15,7 +15,7 @@ $resultado = array();
 while($registro = mysql_fetch_array($consulta)){
     $resultado[]=$registro["IDEVENTO"];
     
-    $query2 = "SELECT * FROM EVENTOS WHERE ID = '".$registro["IDEVENTO"] ."' AND ESTADO = 'ABIERTA INSCRIPCIÓN' ORDER BY INICIO DESC";
+    $query2 = "SELECT * FROM EVENTOS WHERE ID = '".$registro["IDEVENTO"] ."' AND ACTIVO = 'SI' AND ESTADO = 'ABIERTA INSCRIPCIÓN' ORDER BY INICIO DESC";
     $consulta2 = mysql_query($query2);
 
     while($registro2 = mysql_fetch_array($consulta2)){
